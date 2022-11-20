@@ -33,8 +33,8 @@ class UserManager(UserManager):
     
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('メールアドレス', unique=True)
-    first_name = models.CharField('性', max_length=30)
-    last_name = models.CharField('名', max_length=30)
+    last_name = models.CharField('性', max_length=30)
+    first_name = models.CharField('名', max_length=30)
     address = models.CharField('住所', max_length=30, blank=True)
     tel = models.CharField('電話番号', max_length=30, blank=True)
     created_at = models.DateTimeField('入会日', default=timezone.now)
