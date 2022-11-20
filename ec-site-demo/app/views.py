@@ -117,13 +117,13 @@ class PaymentView(LoginRequiredMixin, View):
         }
         return render(request, 'app/payment.html', context)
     
-    def poast(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         order = Order.objects.get(user=request.user, ordered=False)
         order_items = order.items.all()
         amount = order.get_total()
         
         payment = Payment(user=request.user)
-        payment.stripe_change_id = 'test_stripe_change_id'
+        payment.stripe_charge_id = 'test_stripe_charge_id'
         payment.amount = amount
         payment.save()
         
