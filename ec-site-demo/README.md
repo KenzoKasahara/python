@@ -1,4 +1,4 @@
-# Create Custom User Model and Authenticaion function
+# Create demo EC site
 
 ## Implementation function
 
@@ -6,3 +6,5 @@
 2. Login
 3. Logout
 4. Profile Update
+5. Cart
+6. Credit card Payment

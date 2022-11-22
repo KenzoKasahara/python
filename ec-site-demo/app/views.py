@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.models import CustomUser
+import stripe
+from django.conf import settings
 
 # Create your views here.
 class IndexView(View):
@@ -118,12 +120,26 @@ class PaymentView(LoginRequiredMixin, View):
         return render(request, 'app/payment.html', context)
     
     def post(self, request, *args, **kwargs):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
         order = Order.objects.get(user=request.user, ordered=False)
+        token = request.POST.get('stripeToken')
         order_items = order.items.all()
         amount = order.get_total()
+        item_list = []
+        for order_item in order_items:
+            item_list.append(str(order_item) + ':' + str(order_item.quantity))
+            
+        description = ' '.join(item_list)
+        
+        charge = stripe.Charge.create(
+            amount=amount,
+            currency='jpy',
+            description=description,
+            source=token
+        )
         
         payment = Payment(user=request.user)
-        payment.stripe_charge_id = 'test_stripe_charge_id'
+        payment.stripe_charge_id = charge['id']
         payment.amount = amount
         payment.save()
         
